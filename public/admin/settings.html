@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOBAL AUTO VARIASI - Settings Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>GLOBAL AUTO VARIASI</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item" data-page="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-page="analytics">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="#" class="nav-item" data-page="inventory">
+                <i class="fas fa-boxes"></i>
+                <span>Inventory</span>
+            </a>
+            <a href="#" class="nav-item" data-page="stock">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Stock In/Out</span>
+            </a>
+            <a href="#" class="nav-item active" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <div class="admin-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-name">Admin User</div>
+                    <div class="admin-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Inventory Control</h1>
+                <span class="live-badge">LIVE</span>
+            </div>
+            <div class="header-right">
+                <button class="header-btn notification-btn" type="button" aria-label="Notifikasi">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="header-btn profile-btn" type="button" aria-label="Profil Admin">
+                    <span class="profile-avatar">A</span>
+                </button>
+                <button class="header-btn logout-btn" type="button" aria-label="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Konten Settings -->
+        <div class="dashboard-content">
+            <!-- Settings Header -->
+            <div class="settings-header-section">
+                <div class="section-header">
+                    <h2>Settings</h2>
+                    <p class="section-description">Kelola pengaturan akun dan preferensi sistem</p>
+                </div>
+            </div>
+
+            <!-- Settings Grid -->
+            <div class="settings-grid">
+                <!-- Admin Profile Card -->
+                <div class="settings-card profile-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-circle"></i> Profile Admin</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="profile-section">
+                            <div class="profile-avatar">
+                                <img src="https://via.placeholder.com/120x120/1E293B/94A3B8?text=Admin" alt="Admin Avatar" id="profileImage">
+                                <button class="avatar-upload-btn" id="uploadAvatarBtn">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                            </div>
+                            <div class="profile-info">
+                                <h4 id="adminName">Admin User</h4>
+                                <p class="admin-role">Administrator</p>
+                                <div class="profile-details">
+                                    <div class="detail-item">
+                                        <i class="fas fa-envelope"></i>
+                                        <span id="adminEmail">admin@globalauto.com</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-phone"></i>
+                                        <span id="adminPhone">+62 812-3456-7890</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-secondary" id="editProfileBtn">
+                                <i class="fas fa-edit"></i> Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Settings -->
+                <div class="settings-card account-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-cog"></i> Pengaturan Akun</h3>
+                    </div>
+                    <form id="accountForm" class="settings-form">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" value="admin_user" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" value="admin@globalauto.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">Password Baru</label>
+                            <input type="password" id="newPassword" name="newPassword" placeholder="Masukkan password baru">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Konfirmasi Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Konfirmasi password baru">
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Simpan Perubahan
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Preferences -->
+                <div class="settings-card preferences-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-sliders-h"></i> Preferensi</h3>
+                    </div>
+                    <div class="preferences-list">
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <label for="darkMode">Dark Mode</label>
+                                <p>Mode tampilan gelap untuk interface</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="darkMode" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <label for="emailNotifications">Notifikasi Email</label>
+                                <p>Terima notifikasi via email</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="emailNotifications" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <label for="stockAlerts">Notifikasi Stok Menipis</label>
+                                <p>Alert ketika stok produk menipis</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="stockAlerts" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <label for="systemLanguage">Bahasa Sistem</label>
+                                <p>Pilih bahasa untuk interface</p>
+                            </div>
+                            <select id="systemLanguage" class="preference-select">
+                                <option value="id" selected>Indonesia</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="settings-card security-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-shield-alt"></i> Keamanan</h3>
+                    </div>
+                    <div class="security-info">
+                        <div class="security-item">
+                            <div class="security-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="security-details">
+                                <h4>Aktivitas Login Terakhir</h4>
+                                <p id="lastLogin">15 Januari 2024, 10:30 WIB</p>
+                                <small>Chrome di Windows 11</small>
+                            </div>
+                        </div>
+                        <div class="security-item">
+                            <div class="security-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="security-details">
+                                <h4>Perangkat Aktif</h4>
+                                <p>2 perangkat aktif</p>
+                                <small>Windows 11, Android Phone</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="security-actions">
+                        <button class="btn-secondary" id="logoutAllBtn">
+                            <i class="fas fa-sign-out-alt"></i> Logout Semua Perangkat
+                        </button>
+                        <button class="btn-danger" id="resetPasswordBtn">
+                            <i class="fas fa-key"></i> Reset Password
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Edit Profile -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Profile</h3>
+                <button class="modal-close" id="profileModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="editName">Nama Lengkap</label>
+                    <input type="text" id="editName" name="name" value="Admin User" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" name="email" value="admin@globalauto.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPhone">Nomor Telepon</label>
+                    <input type="tel" id="editPhone" name="phone" value="+62 812-3456-7890" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelProfileBtn">Batal</button>
+                    <button type="submit" class="btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOBAL AUTO VARIASI - Dashboard Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>GLOBAL AUTO VARIASI</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-page="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-page="analytics">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="#" class="nav-item" data-page="inventory">
+                <i class="fas fa-boxes"></i>
+                <span>Inventory</span>
+            </a>
+            <a href="#" class="nav-item" data-page="stock">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Stock In/Out</span>
+            </a>
+            <a href="#" class="nav-item" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <div class="admin-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-name">Admin User</div>
+                    <div class="admin-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Inventory Control</h1>
+                <span class="live-badge">LIVE</span>
+            </div>
+            <div class="header-right">
+                <button class="header-btn notification-btn" type="button" aria-label="Notifikasi">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="header-btn profile-btn" type="button" aria-label="Profil Admin">
+                    <span class="profile-avatar">A</span>
+                </button>
+                <button class="header-btn logout-btn" type="button" aria-label="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Konten Dashboard -->
+        <div class="dashboard-content">
+            <!-- Kartu Statistik -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="statTotalSku">--</div>
+                        <div class="stat-label">Total SKU</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +12%
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="statNilaiStok">--</div>
+                        <div class="stat-label">Nilai Stok</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +8%
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="statStokMenipis">--</div>
+                        <div class="stat-label">Stok Menipis</div>
+                        <div class="stat-change negative">
+                            <i class="fas fa-arrow-down"></i>
+                            -5%
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="statPerputaran">--%</div>
+                        <div class="stat-label">Perputaran Stok</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +3%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bagian Inventory -->
+            <div class="inventory-section">
+                <div class="section-header">
+                    <h2>Inventory</h2>
+                    <div class="section-actions">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Cari produk..." id="dashboardSearchInput">
+                        </div>
+                        <select class="filter-select" id="dashboardCategoryFilter">
+                            <option value="">Semua Kategori</option>
+                            <option value="audio">Audio</option>
+                            <option value="ban">Ban</option>
+                            <option value="velg">Velg</option>
+                            <option value="lampu">Lampu</option>
+                            <option value="bodykit">Body Kit</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="inventory-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produk</th>
+                                <th>SKU</th>
+                                <th>Kategori</th>
+                                <th>Stok</th>
+                                <th>Minimum</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboardTableBody">
+                            <!-- Data dimuat dari API -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Kanan -->
+        <aside class="right-panel">
+            <div class="panel-section">
+                <h3>Smart Alerts</h3>
+                <div class="alerts-list" id="alertsList">
+            </div>
+
+            <div class="panel-section">
+                <h3>Pergerakan Stok</h3>
+                <canvas id="stockChart"></canvas>
+            </div>
+
+            <div class="panel-section">
+                <h3>Statistik Harian</h3>
+                <div class="daily-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Barang Terjual</span>
+                        <span class="stat-value" id="statDailySold">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Pendapatan</span>
+                        <span class="stat-value" id="statDailyRevenue">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Pesanan Baru</span>
+                        <span class="stat-value" id="statDailyOrders">--</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <div class="modal" id="logout-modal" aria-hidden="true">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fas fa-sign-out-alt"></i></div>
+                <div>
+                    <h2>Yakin ingin logout?</h2>
+                    <p>Anda akan keluar dari sesi admin saat ini.</p>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary modal-close" type="button">Batal</button>
+                <button class="btn btn-danger confirm-logout" type="button">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>

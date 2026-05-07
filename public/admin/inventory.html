@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOBAL AUTO VARIASI - Inventory Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>GLOBAL AUTO VARIASI</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item" data-page="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-page="analytics">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="#" class="nav-item active" data-page="inventory">
+                <i class="fas fa-boxes"></i>
+                <span>Inventory</span>
+            </a>
+            <a href="#" class="nav-item" data-page="stock">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Stock In/Out</span>
+            </a>
+            <a href="#" class="nav-item" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <div class="admin-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-name">Admin User</div>
+                    <div class="admin-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Inventory Control</h1>
+                <span class="live-badge">LIVE</span>
+            </div>
+            <div class="header-right">
+                <button class="header-btn notification-btn" type="button" aria-label="Notifikasi">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="header-btn profile-btn" type="button" aria-label="Profil Admin">
+                    <span class="profile-avatar">A</span>
+                </button>
+                <button class="header-btn logout-btn" type="button" aria-label="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Konten Inventory -->
+        <div class="dashboard-content">
+            <!-- Inventory Header -->
+            <div class="inventory-header-section">
+                <div class="section-header">
+                    <h2>Inventory</h2>
+                    <div class="section-actions">
+                        <button class="btn-primary" id="addProductBtn">
+                            <i class="fas fa-plus"></i>
+                            Tambah Produk
+                        </button>
+                    </div>
+                </div>
+                <div class="inventory-filters">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Cari produk..." id="searchInput">
+                    </div>
+                    <select class="filter-select" id="categoryFilter">
+                        <option value="">Semua Kategori</option>
+                        <option value="audio">Audio</option>
+                        <option value="ban">Ban</option>
+                        <option value="velg">Velg</option>
+                        <option value="lampu">Lampu</option>
+                        <option value="bodykit">Body Kit</option>
+                    </select>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="">Semua Status</option>
+                        <option value="aman">Aman</option>
+                        <option value="menipis">Menipis</option>
+                        <option value="kritis">Kritis</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Inventory Table -->
+            <div class="inventory-section">
+                <div class="inventory-table-container">
+                    <table class="inventory-table" id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th>Produk</th>
+                                <th>SKU</th>
+                                <th>Kategori</th>
+                                <th>Stok</th>
+                                <th>Harga</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody">
+                            <!-- Data will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="pagination-btn" id="prevBtn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span class="pagination-info">Halaman 1 dari 3</span>
+                    <button class="pagination-btn" id="nextBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Tambah/Edit Produk -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Tambah Produk</h3>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="productName">Nama Produk</label>
+                    <input type="text" id="productName" name="productName" required>
+                </div>
+                <div class="form-group">
+                    <label for="productSKU">SKU</label>
+                    <input type="text" id="productSKU" name="productSKU" required>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Kategori</label>
+                    <select id="productCategory" name="productCategory" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="audio">Audio</option>
+                        <option value="ban">Ban</option>
+                        <option value="velg">Velg</option>
+                        <option value="lampu">Lampu</option>
+                        <option value="bodykit">Body Kit</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Harga</label>
+                    <input type="number" id="productPrice" name="productPrice" required>
+                </div>
+                <div class="form-group">
+                    <label for="productStock">Stok</label>
+                    <input type="number" id="productStock" name="productStock" required>
+                </div>
+                <div class="form-group">
+                    <label for="productImage">Gambar Produk</label>
+                    <input type="file" id="productImage" name="productImage" accept="image/*">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Batal</button>
+                    <button type="submit" class="btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h3>Hapus Produk</h3>
+                <button class="modal-close" id="deleteModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus produk ini?</p>
+                <p class="delete-warning">Tindakan ini tidak dapat dibatalkan.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="deleteCancelBtn">Batal</button>
+                <button class="btn-danger" id="deleteConfirmBtn">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>
