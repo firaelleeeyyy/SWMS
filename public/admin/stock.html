@@ -82,7 +82,7 @@
                         <i class="fas fa-arrow-down"></i>
                     </div>
                     <div class="stat-content">
-                        <div class="stat-number">1,247</div>
+                        <div class="stat-number" id="stockStatIn">--</div>
                         <div class="stat-label">Total Barang Masuk</div>
                         <div class="stat-change positive">
                             <i class="fas fa-arrow-up"></i>
@@ -95,7 +95,7 @@
                         <i class="fas fa-arrow-up"></i>
                     </div>
                     <div class="stat-content">
-                        <div class="stat-number">892</div>
+                        <div class="stat-number" id="stockStatOut">--</div>
                         <div class="stat-label">Total Barang Keluar</div>
                         <div class="stat-change negative">
                             <i class="fas fa-arrow-down"></i>
@@ -108,7 +108,7 @@
                         <i class="fas fa-calendar-day"></i>
                     </div>
                     <div class="stat-content">
-                        <div class="stat-number">47</div>
+                        <div class="stat-number" id="stockStatToday">--</div>
                         <div class="stat-label">Transaksi Hari Ini</div>
                         <div class="stat-change positive">
                             <i class="fas fa-arrow-up"></i>
@@ -121,7 +121,7 @@
                         <i class="fas fa-fire"></i>
                     </div>
                     <div class="stat-content">
-                        <div class="stat-number">JBL Club 6500C</div>
+                        <div class="stat-number" id="stockStatActive">--</div>
                         <div class="stat-label">Produk Paling Aktif</div>
                         <div class="stat-change positive">
                             <i class="fas fa-arrow-up"></i>
@@ -150,12 +150,6 @@
                                     <label for="stockInProduct">Produk</label>
                                     <select id="stockInProduct" name="product" required>
                                         <option value="">Pilih Produk</option>
-                                        <option value="pioneer">Pioneer AVH-Z9280BT</option>
-                                        <option value="jbl">JBL Club 6500C</option>
-                                        <option value="michelin">Michelin Pilot Sport 4</option>
-                                        <option value="enkei">Enkei RP-F1</option>
-                                        <option value="hella">Hella Projector H7</option>
-                                        <option value="trd">TRD Body Kit</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -190,12 +184,6 @@
                                     <label for="stockOutProduct">Produk</label>
                                     <select id="stockOutProduct" name="product" required>
                                         <option value="">Pilih Produk</option>
-                                        <option value="pioneer">Pioneer AVH-Z9280BT</option>
-                                        <option value="jbl">JBL Club 6500C</option>
-                                        <option value="michelin">Michelin Pilot Sport 4</option>
-                                        <option value="enkei">Enkei RP-F1</option>
-                                        <option value="hella">Hella Projector H7</option>
-                                        <option value="trd">TRD Body Kit</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -232,8 +220,8 @@
                         </div>
                         <select class="filter-select" id="transactionTypeFilter">
                             <option value="">Semua Jenis</option>
-                            <option value="masuk">Barang Masuk</option>
-                            <option value="keluar">Barang Keluar</option>
+                            <option value="in">Barang Masuk</option>
+                            <option value="out">Barang Keluar</option>
                         </select>
                         <input type="date" class="filter-select" id="dateFilter">
                     </div>
@@ -253,76 +241,7 @@
                             </tr>
                         </thead>
                         <tbody id="transactionTableBody">
-                            <tr>
-                                <td>STK-2024-001</td>
-                                <td>
-                                    <div class="product-info">
-                                        <div class="product-name">Pioneer AVH-Z9280BT</div>
-                                        <div class="product-desc">Head Unit Audio Mobil</div>
-                                    </div>
-                                </td>
-                                <td><span class="transaction-badge masuk">Masuk</span></td>
-                                <td class="text-center">25</td>
-                                <td>2024-01-15 10:30</td>
-                                <td>Admin User</td>
-                                <td><span class="status-badge completed">Selesai</span></td>
-                            </tr>
-                            <tr>
-                                <td>STK-2024-002</td>
-                                <td>
-                                    <div class="product-info">
-                                        <div class="product-name">JBL Club 6500C</div>
-                                        <div class="product-desc">Speaker Mobil 6.5"</div>
-                                    </div>
-                                </td>
-                                <td><span class="transaction-badge keluar">Keluar</span></td>
-                                <td class="text-center">12</td>
-                                <td>2024-01-15 14:20</td>
-                                <td>Admin User</td>
-                                <td><span class="status-badge completed">Selesai</span></td>
-                            </tr>
-                            <tr>
-                                <td>STK-2024-003</td>
-                                <td>
-                                    <div class="product-info">
-                                        <div class="product-name">Michelin Pilot Sport 4</div>
-                                        <div class="product-desc">Ban Performansi 205/55R16</div>
-                                    </div>
-                                </td>
-                                <td><span class="transaction-badge masuk">Masuk</span></td>
-                                <td class="text-center">8</td>
-                                <td>2024-01-14 09:15</td>
-                                <td>Admin User</td>
-                                <td><span class="status-badge completed">Selesai</span></td>
-                            </tr>
-                            <tr>
-                                <td>STK-2024-004</td>
-                                <td>
-                                    <div class="product-info">
-                                        <div class="product-name">Enkei RP-F1</div>
-                                        <div class="product-desc">Velg Alloy 17" Silver</div>
-                                    </div>
-                                </td>
-                                <td><span class="transaction-badge keluar">Keluar</span></td>
-                                <td class="text-center">5</td>
-                                <td>2024-01-14 16:45</td>
-                                <td>Admin User</td>
-                                <td><span class="status-badge pending">Pending</span></td>
-                            </tr>
-                            <tr>
-                                <td>STK-2024-005</td>
-                                <td>
-                                    <div class="product-info">
-                                        <div class="product-name">Hella Projector H7</div>
-                                        <div class="product-desc">Lampu Projector LED H7</div>
-                                    </div>
-                                </td>
-                                <td><span class="transaction-badge masuk">Masuk</span></td>
-                                <td class="text-center">15</td>
-                                <td>2024-01-13 11:30</td>
-                                <td>Admin User</td>
-                                <td><span class="status-badge completed">Selesai</span></td>
-                            </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -332,7 +251,7 @@
                     <button class="pagination-btn" id="prevBtn" disabled>
                         <i class="fas fa-chevron-left"></i>
                     </button>
-                    <span class="pagination-info">Halaman 1 dari 5</span>
+                    <span class="pagination-info" id="paginationInfo">Halaman 1 dari 1</span>
                     <button class="pagination-btn" id="nextBtn">
                         <i class="fas fa-chevron-right"></i>
                     </button>

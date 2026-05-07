@@ -185,6 +185,111 @@ const server = http.createServer(async (req, res) => {
             return;
         }
 
+        if (req.url === '/api/transactions' && req.method === 'GET') {
+            try {
+                const [rows] = await db.execute(
+                    `SELECT t.id, t.type, t.quantity, t.total_price, t.supplier, t.destination, t.notes, t.admin, t.date,
+                            p.name as product_name, p.description as product_desc
+                     FROM transactions t
+                     JOIN products p ON t.product_id = p.id
+                     ORDER BY t.date DESC
+                     LIMIT 100`
+                );
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, data: rows }));
+            } catch (error) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, message: 'Terjadi kesalahan server' }));
+            }
+            return;
+        }
+
+        if (req.url === '/api/transactions' && req.method === 'POST') {
+            let body = '';
+            req.on('data', chunk => body += chunk.toString());
+            req.on('end', async () => {
+                try {
+                    const data = JSON.parse(body);
+                    const { product_id, type, quantity, supplier, destination, notes } = data;
+
+                    if (!product_id || !type || !quantity || quantity < 1) {
+                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ success: false, message: 'Data tidak lengkap' }));
+                        return;
+                    }
+
+                    const [prodRows] = await db.execute('SELECT id, price, stock FROM products WHERE id = ?', [product_id]);
+                    if (prodRows.length === 0) {
+                        res.writeHead(404, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ success: false, message: 'Produk tidak ditemukan' }));
+                        return;
+                    }
+
+                    const product = prodRows[0];
+
+                    if (type === 'out' && product.stock < quantity) {
+                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ success: false, message: `Stok tidak cukup (sisa ${product.stock})` }));
+                        return;
+                    }
+
+                    const totalPrice = quantity * parseFloat(product.price);
+
+                    await db.execute(
+                        'INSERT INTO transactions (product_id, type, quantity, total_price, supplier, destination, notes) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                        [product_id, type, quantity, totalPrice, supplier || null, destination || null, notes || null]
+                    );
+
+                    const newStock = type === 'in' ? product.stock + parseInt(quantity) : product.stock - parseInt(quantity);
+                    let newStatus = 'aman';
+                    if (newStock <= 5) newStatus = 'kritis';
+                    else if (newStock <= 15) newStatus = 'menipis';
+
+                    await db.execute('UPDATE products SET stock = ?, status = ? WHERE id = ?', [newStock, newStatus, product_id]);
+
+                    res.writeHead(201, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: true, message: type === 'in' ? 'Stok berhasil ditambahkan' : 'Stok berhasil dikeluarkan' }));
+                } catch (error) {
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, message: 'Terjadi kesalahan server' }));
+                }
+            });
+            return;
+        }
+
+        if (req.url === '/api/stock-stats' && req.method === 'GET') {
+            try {
+                const [inRows] = await db.execute("SELECT COALESCE(SUM(quantity),0) as total FROM transactions WHERE type = 'in'");
+                const [outRows] = await db.execute("SELECT COALESCE(SUM(quantity),0) as total FROM transactions WHERE type = 'out'");
+
+                const todayStr = new Date().toISOString().slice(0, 10);
+                const [todayRows] = await db.execute("SELECT COUNT(*) as total FROM transactions WHERE DATE(date) = ?", [todayStr]);
+
+                const [activeRows] = await db.execute(
+                    `SELECT p.name FROM transactions t
+                     JOIN products p ON t.product_id = p.id
+                     GROUP BY t.product_id
+                     ORDER BY SUM(t.quantity) DESC
+                     LIMIT 1`
+                );
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({
+                    success: true,
+                    data: {
+                        totalIn: parseInt(inRows[0].total),
+                        totalOut: parseInt(outRows[0].total),
+                        todayCount: parseInt(todayRows[0].total),
+                        mostActive: activeRows.length > 0 ? activeRows[0].name : '-'
+                    }
+                }));
+            } catch (error) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, message: 'Terjadi kesalahan server' }));
+            }
+            return;
+        }
+
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'API endpoint not found' }));
         return;

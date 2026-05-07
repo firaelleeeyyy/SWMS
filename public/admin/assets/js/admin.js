@@ -1091,8 +1091,10 @@ function initializeSettings() {
 function setupGlobalEventListeners() {
     // Button ripple effects
     document.addEventListener('click', (e) => {
-        if (e.target.closest('.btn-primary, .btn-secondary, .btn-danger')) {
-            Utils.createRippleEffect(e);
+        const btn = e.target.closest('.btn-primary, .btn-secondary, .btn-danger');
+        if (btn) {
+            const fakeEvent = { currentTarget: btn, clientX: e.clientX, clientY: e.clientY };
+            Utils.createRippleEffect(fakeEvent);
         }
     });
 
@@ -1147,26 +1149,8 @@ function setupInventoryModals() {
 }
 
 function setupStockForms() {
-    const stockInForm = document.getElementById('stockInForm');
-    const stockOutForm = document.getElementById('stockOutForm');
-
-    if (stockInForm) {
-        stockInForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            Utils.showToast('Barang masuk berhasil dicatat!', 'success');
-            e.target.reset();
-        });
-    }
-
-    if (stockOutForm) {
-        stockOutForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            Utils.showToast('Barang keluar berhasil dicatat!', 'success');
-            e.target.reset();
-        });
-    }
+    // Handled by StockManager
 }
-
 
 // CSS FOR DYNAMIC ELEMENTS
 
@@ -1990,10 +1974,245 @@ document.addEventListener('DOMContentLoaded', () => {
         new DashboardStatsManager();
     }
 
-    if (document.getElementById('transactionTableBody')) {
-        new TransactionSearchManager();
+    if (document.getElementById('stockInForm') || document.getElementById('transactionTableBody')) {
+        new StockManager();
     }
 });
+
+class StockManager {
+    constructor() {
+        this.tableBody = document.getElementById('transactionTableBody');
+        this.allTransactions = [];
+        this.filteredTransactions = [];
+        this.currentPage = 1;
+        this.perPage = 10;
+        this.init();
+    }
+
+    async init() {
+        await this.loadProductDropdowns();
+        await this.loadTransactions();
+        await this.loadStats();
+        this.setupForms();
+        this.setupFilters();
+    }
+
+    async loadProductDropdowns() {
+        try {
+            const response = await fetch('/api/products');
+            const result = await response.json();
+            if (!result.success) return;
+
+            const selects = [
+                document.getElementById('stockInProduct'),
+                document.getElementById('stockOutProduct')
+            ];
+
+            selects.forEach(select => {
+                if (!select) return;
+                select.innerHTML = '<option value="">Pilih Produk</option>';
+                result.data.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p.id;
+                    opt.textContent = `${p.name} (Stok: ${p.stock})`;
+                    select.appendChild(opt);
+                });
+            });
+        } catch (error) {
+            // silently fail
+        }
+    }
+
+    async loadStats() {
+        try {
+            const response = await fetch('/api/stock-stats');
+            const result = await response.json();
+            if (!result.success) return;
+
+            const el = (id) => document.getElementById(id);
+            const d = result.data;
+
+            const inEl = el('stockStatIn');
+            if (inEl) inEl.textContent = d.totalIn.toLocaleString('id-ID');
+
+            const outEl = el('stockStatOut');
+            if (outEl) outEl.textContent = d.totalOut.toLocaleString('id-ID');
+
+            const todayEl = el('stockStatToday');
+            if (todayEl) todayEl.textContent = d.todayCount.toLocaleString('id-ID');
+
+            const activeEl = el('stockStatActive');
+            if (activeEl) activeEl.textContent = d.mostActive;
+        } catch (error) {
+            // silently fail
+        }
+    }
+
+    async loadTransactions() {
+        if (!this.tableBody) return;
+        try {
+            const response = await fetch('/api/transactions');
+            const result = await response.json();
+            if (result.success) {
+                this.allTransactions = result.data;
+                this.applyFilters();
+            }
+        } catch (error) {
+            // silently fail
+        }
+    }
+
+    setupForms() {
+        const stockInForm = document.getElementById('stockInForm');
+        if (stockInForm) {
+            stockInForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await this.submitTransaction('in', {
+                    product_id: document.getElementById('stockInProduct').value,
+                    quantity: parseInt(document.getElementById('stockInQuantity').value),
+                    supplier: document.getElementById('stockInSupplier').value,
+                    notes: document.getElementById('stockInNotes').value
+                });
+                stockInForm.reset();
+            });
+        }
+
+        const stockOutForm = document.getElementById('stockOutForm');
+        if (stockOutForm) {
+            stockOutForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await this.submitTransaction('out', {
+                    product_id: document.getElementById('stockOutProduct').value,
+                    quantity: parseInt(document.getElementById('stockOutQuantity').value),
+                    destination: document.getElementById('stockOutDestination').value,
+                    notes: document.getElementById('stockOutNotes').value
+                });
+                stockOutForm.reset();
+            });
+        }
+    }
+
+    async submitTransaction(type, data) {
+        try {
+            const response = await fetch('/api/transactions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...data, type })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                Utils.showToast(result.message, 'success');
+                await this.loadProductDropdowns();
+                await this.loadTransactions();
+                await this.loadStats();
+            } else {
+                Utils.showToast(result.message || 'Gagal memproses transaksi', 'error');
+            }
+        } catch (error) {
+            Utils.showToast('Terjadi kesalahan koneksi', 'error');
+        }
+    }
+
+    setupFilters() {
+        const searchInput = document.getElementById('transactionSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', Utils.debounce(() => this.applyFilters(), 250));
+        }
+
+        const typeFilter = document.getElementById('transactionTypeFilter');
+        if (typeFilter) {
+            typeFilter.addEventListener('change', () => this.applyFilters());
+        }
+
+        const dateFilter = document.getElementById('dateFilter');
+        if (dateFilter) {
+            dateFilter.addEventListener('change', () => this.applyFilters());
+        }
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) prevBtn.addEventListener('click', () => { this.currentPage--; this.renderTable(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { this.currentPage++; this.renderTable(); });
+    }
+
+    applyFilters() {
+        const searchVal = (document.getElementById('transactionSearch')?.value || '').toLowerCase().trim();
+        const typeVal = (document.getElementById('transactionTypeFilter')?.value || '');
+        const dateVal = document.getElementById('dateFilter')?.value || '';
+
+        this.filteredTransactions = this.allTransactions.filter(tx => {
+            let show = true;
+
+            if (searchVal) {
+                const text = `${tx.product_name} ${tx.product_desc || ''} ${tx.admin || ''}`.toLowerCase();
+                show = show && text.includes(searchVal);
+            }
+
+            if (typeVal) {
+                show = show && tx.type === typeVal;
+            }
+
+            if (dateVal) {
+                const txDate = new Date(tx.date).toISOString().slice(0, 10);
+                show = show && txDate === dateVal;
+            }
+
+            return show;
+        });
+
+        this.currentPage = 1;
+        this.renderTable();
+    }
+
+    renderTable() {
+        if (!this.tableBody) return;
+        this.tableBody.innerHTML = '';
+
+        const totalPages = Math.max(1, Math.ceil(this.filteredTransactions.length / this.perPage));
+        if (this.currentPage > totalPages) this.currentPage = totalPages;
+        if (this.currentPage < 1) this.currentPage = 1;
+
+        const start = (this.currentPage - 1) * this.perPage;
+        const pageData = this.filteredTransactions.slice(start, start + this.perPage);
+
+        if (pageData.length === 0) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = '<td colspan="7" style="text-align:center; padding:40px; color:var(--text-muted);">Tidak ada transaksi ditemukan</td>';
+            this.tableBody.appendChild(tr);
+        } else {
+            pageData.forEach(tx => {
+                const badgeClass = tx.type === 'in' ? 'masuk' : 'keluar';
+                const badgeText = tx.type === 'in' ? 'Masuk' : 'Keluar';
+                const dateStr = new Date(tx.date).toLocaleString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>STK-${String(tx.id).padStart(4, '0')}</td>
+                    <td>
+                        <div class="product-info">
+                            <div class="product-name">${tx.product_name}</div>
+                            <div class="product-desc">${tx.product_desc || ''}</div>
+                        </div>
+                    </td>
+                    <td><span class="transaction-badge ${badgeClass}">${badgeText}</span></td>
+                    <td class="text-center">${tx.quantity}</td>
+                    <td>${dateStr}</td>
+                    <td>${tx.admin || 'Admin User'}</td>
+                    <td><span class="status-badge completed">Selesai</span></td>
+                `;
+                this.tableBody.appendChild(tr);
+            });
+        }
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageInfo = document.getElementById('paginationInfo');
+
+        if (prevBtn) prevBtn.disabled = this.currentPage <= 1;
+        if (nextBtn) nextBtn.disabled = this.currentPage >= totalPages;
+        if (pageInfo) pageInfo.textContent = `Halaman ${this.currentPage} dari ${totalPages}`;
+    }
+}
 
 class DashboardStatsManager {
     constructor() {
