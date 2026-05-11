@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOBAL AUTO VARIASI - Stock In/Out Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>GLOBAL AUTO VARIASI</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item" data-page="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-page="analytics">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="#" class="nav-item" data-page="inventory">
+                <i class="fas fa-boxes"></i>
+                <span>Inventory</span>
+            </a>
+            <a href="#" class="nav-item active" data-page="stock">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Stock In/Out</span>
+            </a>
+            <a href="#" class="nav-item" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <div class="admin-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-name">Admin User</div>
+                    <div class="admin-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Inventory Control</h1>
+                <span class="live-badge">LIVE</span>
+            </div>
+            <div class="header-right">
+                <button class="header-btn notification-btn" type="button" aria-label="Notifikasi">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="header-btn profile-btn" type="button" aria-label="Profil Admin">
+                    <span class="profile-avatar">A</span>
+                </button>
+                <button class="header-btn logout-btn" type="button" aria-label="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Konten Stock In/Out -->
+        <div class="dashboard-content">
+            <!-- Kartu Statistik Stock -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="stockStatIn">--</div>
+                        <div class="stat-label">Total Barang Masuk</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +18%
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="stockStatOut">--</div>
+                        <div class="stat-label">Total Barang Keluar</div>
+                        <div class="stat-change negative">
+                            <i class="fas fa-arrow-down"></i>
+                            -5%
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="stockStatToday">--</div>
+                        <div class="stat-label">Transaksi Hari Ini</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +12%
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="stockStatActive">--</div>
+                        <div class="stat-label">Produk Paling Aktif</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +25%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stock Management Section -->
+            <div class="stock-management-section">
+                <div class="section-header">
+                    <h2>Manajemen Stok</h2>
+                </div>
+
+                <!-- Stock Forms -->
+                <div class="stock-forms-container">
+                    <!-- Stock In Form -->
+                    <div class="stock-form-card">
+                        <div class="form-header">
+                            <h3><i class="fas fa-arrow-down"></i> Barang Masuk</h3>
+                        </div>
+                        <form id="stockInForm" class="stock-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="stockInProduct">Produk</label>
+                                    <select id="stockInProduct" name="product" required>
+                                        <option value="">Pilih Produk</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="stockInQuantity">Jumlah</label>
+                                    <input type="number" id="stockInQuantity" name="quantity" min="1" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="stockInSupplier">Supplier</label>
+                                    <input type="text" id="stockInSupplier" name="supplier" placeholder="Nama supplier">
+                                </div>
+                                <div class="form-group">
+                                    <label for="stockInNotes">Catatan</label>
+                                    <input type="text" id="stockInNotes" name="notes" placeholder="Catatan tambahan">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-plus"></i> Masukkan Stok
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Stock Out Form -->
+                    <div class="stock-form-card">
+                        <div class="form-header">
+                            <h3><i class="fas fa-arrow-up"></i> Barang Keluar</h3>
+                        </div>
+                        <form id="stockOutForm" class="stock-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="stockOutProduct">Produk</label>
+                                    <select id="stockOutProduct" name="product" required>
+                                        <option value="">Pilih Produk</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="stockOutQuantity">Jumlah</label>
+                                    <input type="number" id="stockOutQuantity" name="quantity" min="1" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="stockOutDestination">Tujuan</label>
+                                    <input type="text" id="stockOutDestination" name="destination" placeholder="Toko/Distributor">
+                                </div>
+                                <div class="form-group">
+                                    <label for="stockOutNotes">Catatan</label>
+                                    <input type="text" id="stockOutNotes" name="notes" placeholder="Catatan tambahan">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-danger">
+                                <i class="fas fa-minus"></i> Keluarkan Stok
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaction History -->
+            <div class="transaction-section">
+                <div class="section-header">
+                    <h2>Riwayat Transaksi Stok</h2>
+                    <div class="section-actions">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Cari transaksi..." id="transactionSearch">
+                        </div>
+                        <select class="filter-select" id="transactionTypeFilter">
+                            <option value="">Semua Jenis</option>
+                            <option value="in">Barang Masuk</option>
+                            <option value="out">Barang Keluar</option>
+                        </select>
+                        <input type="date" class="filter-select" id="dateFilter">
+                    </div>
+                </div>
+
+                <div class="transaction-table-container">
+                    <table class="transaction-table">
+                        <thead>
+                            <tr>
+                                <th>ID Transaksi</th>
+                                <th>Produk</th>
+                                <th>Jenis</th>
+                                <th>Jumlah</th>
+                                <th>Tanggal</th>
+                                <th>Admin</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionTableBody">
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="pagination-btn" id="prevBtn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span class="pagination-info" id="paginationInfo">Halaman 1 dari 1</span>
+                    <button class="pagination-btn" id="nextBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>

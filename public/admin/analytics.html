@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOBAL AUTO VARIASI - Analytics Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>GLOBAL AUTO VARIASI</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item" data-page="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item active" data-page="analytics">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="#" class="nav-item" data-page="inventory">
+                <i class="fas fa-boxes"></i>
+                <span>Inventory</span>
+            </a>
+            <a href="#" class="nav-item" data-page="stock">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Stock In/Out</span>
+            </a>
+            <a href="#" class="nav-item" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <div class="admin-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-name">Admin User</div>
+                    <div class="admin-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Inventory Control</h1>
+                <span class="live-badge">LIVE</span>
+            </div>
+            <div class="header-right">
+                <button class="header-btn notification-btn" type="button" aria-label="Notifikasi">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="header-btn profile-btn" type="button" aria-label="Profil Admin">
+                    <span class="profile-avatar">A</span>
+                </button>
+                <button class="header-btn logout-btn" type="button" aria-label="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Konten Analytics -->
+        <div class="dashboard-content">
+            <!-- Kartu Statistik Analytics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">2,847</div>
+                        <div class="stat-label">Total Penjualan</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +18%
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">Rp 45.2M</div>
+                        <div class="stat-label">Pendapatan Bulanan</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +24%
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">1,234</div>
+                        <div class="stat-label">Produk Terjual</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +15%
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">32%</div>
+                        <div class="stat-label">Pertumbuhan Penjualan</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +8%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-row">
+                    <div class="chart-container">
+                        <div class="section-header">
+                            <h2>Grafik Penjualan Bulanan</h2>
+                        </div>
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="section-header">
+                            <h2>Kategori Paling Laku</h2>
+                        </div>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-container">
+                        <div class="section-header">
+                            <h2>Stok Masuk & Keluar</h2>
+                        </div>
+                        <canvas id="stockFlowChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="section-header">
+                            <h2>Ringkasan Performa Toko</h2>
+                        </div>
+                        <div class="performance-summary">
+                            <div class="performance-item">
+                                <span class="performance-label">Rata-rata Transaksi/Hari</span>
+                                <span class="performance-value">47</span>
+                            </div>
+                            <div class="performance-item">
+                                <span class="performance-label">Tingkat Konversi</span>
+                                <span class="performance-value">68%</span>
+                            </div>
+                            <div class="performance-item">
+                                <span class="performance-label">Customer Satisfaction</span>
+                                <span class="performance-value">4.8/5</span>
+                            </div>
+                            <div class="performance-item">
+                                <span class="performance-label">Return Rate</span>
+                                <span class="performance-value">2.1%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Selling Products -->
+            <div class="analytics-section">
+                <div class="section-header">
+                    <h2>Produk Terlaris</h2>
+                </div>
+                <div class="analytics-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produk</th>
+                                <th>Kategori</th>
+                                <th>Jumlah Terjual</th>
+                                <th>Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-name">Pioneer AVH-Z9280BT</div>
+                                        <div class="product-desc">Head Unit Audio Mobil</div>
+                                    </div>
+                                </td>
+                                <td>Audio</td>
+                                <td class="text-center">156</td>
+                                <td class="text-center">Rp 23.4M</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-name">Michelin Pilot Sport 4</div>
+                                        <div class="product-desc">Ban Performansi 205/55R16</div>
+                                    </div>
+                                </td>
+                                <td>Ban</td>
+                                <td class="text-center">134</td>
+                                <td class="text-center">Rp 18.7M</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-name">JBL Club 6500C</div>
+                                        <div class="product-desc">Speaker Mobil 6.5"</div>
+                                    </div>
+                                </td>
+                                <td>Audio</td>
+                                <td class="text-center">98</td>
+                                <td class="text-center">Rp 14.7M</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-name">Enkei RP-F1</div>
+                                        <div class="product-desc">Velg Alloy 17" Silver</div>
+                                    </div>
+                                </td>
+                                <td>Velg</td>
+                                <td class="text-center">87</td>
+                                <td class="text-center">Rp 13.1M</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-name">Bridgestone Turanza T005</div>
+                                        <div class="product-desc">Ban Premium 225/45R17</div>
+                                    </div>
+                                </td>
+                                <td>Ban</td>
+                                <td class="text-center">76</td>
+                                <td class="text-center">Rp 11.4M</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>
