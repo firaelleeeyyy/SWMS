@@ -93,6 +93,7 @@
                 loginButton.querySelector('.btn-text').textContent = 'Login Admin';
 
                 if (data.success) {
+                    sessionStorage.setItem('isLoggedIn', 'true');
                     window.location.href = 'admin/dashboard.html';
                 } else {
                     document.querySelector('#toast small').textContent = data.message;

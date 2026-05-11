@@ -3,6 +3,14 @@
  * Complete functionality for all admin pages
  */
 
+// ====== AUTH GUARD ======
+(function checkAuth() {
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    if (!isLoggedIn) {
+        window.location.href = '../login.html';
+    }
+})();
+
 const CONFIG = {
     pages: {
         dashboard: 'dashboard.html',
@@ -567,6 +575,7 @@ class ModalManager {
 
             const logoutTrigger = e.target.closest('.confirm-logout');
             if (logoutTrigger) {
+                sessionStorage.removeItem('isLoggedIn');
                 window.location.href = '../login.html';
             }
         });
@@ -863,6 +872,12 @@ class ChartManager {
     static createChart(canvasId, config) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return null;
+
+        // Guard: if Chart.js failed to load from CDN, skip chart creation
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js belum termuat. Pastikan koneksi internet aktif.');
+            return null;
+        }
 
         // Destroy existing chart
         const existingChart = Chart.getChart(canvas);
