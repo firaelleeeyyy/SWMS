@@ -190,6 +190,11 @@ textarea:focus {
     min-width: 0;
 }
 
+.header-btn {
+    min-width: 40px;
+    padding: 0;
+}
+
 .dashboard-content {
     padding: 20px;
     overflow-y: auto;
@@ -378,6 +383,9 @@ textarea:focus {
     display: flex;
     gap: 12px;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    min-width: 0;
 }
 
 .header-btn {
@@ -386,6 +394,7 @@ textarea:focus {
     color: var(--text-secondary);
     width: 40px;
     height: 40px;
+    min-width: 40px;
     border-radius: var(--border-radius);
     display: flex;
     align-items: center;
@@ -1315,11 +1324,14 @@ textarea:focus {
         width: 100%;
         justify-content: flex-end;
         gap: 10px;
+        flex-wrap: wrap;
+        min-width: 0;
     }
 
     .header-btn {
         width: 36px;
         height: 36px;
+        min-width: 36px;
     }
 
     .header-btn i {
@@ -1449,11 +1461,14 @@ textarea:focus {
         width: 100%;
         justify-content: flex-end;
         gap: 8px;
+        flex-wrap: wrap;
+        min-width: 0;
     }
 
     .header-btn {
         width: 34px;
         height: 34px;
+        min-width: 34px;
     }
 
     .header-btn i {

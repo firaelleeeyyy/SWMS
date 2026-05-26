@@ -749,38 +749,6 @@ class TableManager {
 // SETTINGS MANAGEMENT
 
 class SettingsManager {
-    constructor() {
-        this.darkMode = localStorage.getItem('darkMode') === 'true';
-        this.init();
-    }
-
-    init() {
-        this.setupDarkMode();
-        this.setupPasswordVisibility();
-        this.setupFormValidation();
-        this.loadSettings();
-    }
-
-    setupDarkMode() {
-        const toggle = document.getElementById('darkMode');
-        if (toggle) {
-            toggle.checked = this.darkMode;
-            toggle.addEventListener('change', () => this.toggleDarkMode());
-        }
-        this.applyDarkMode();
-    }
-
-    toggleDarkMode() {
-        this.darkMode = !this.darkMode;
-        localStorage.setItem('darkMode', this.darkMode);
-        this.applyDarkMode();
-        Utils.showToast(`Dark mode ${this.darkMode ? 'diaktifkan' : 'dinonaktifkan'}`, 'info');
-    }
-
-    applyDarkMode() {
-        document.documentElement.classList.toggle('dark-mode', this.darkMode);
-    }
-
     setupPasswordVisibility() {
         const passwordFields = document.querySelectorAll('input[type="password"]');
         passwordFields.forEach(field => {
